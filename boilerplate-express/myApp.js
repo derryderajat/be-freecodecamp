@@ -20,6 +20,10 @@ var app = express();
 // });
 
 // app.use(express.static(__dirname.concat('/public')))
+app.use((request, response, next) => {
+  console.log(request.method + " " + request.path + " - " + request.ip);
+  next();
+});
 app.use("/public", express.static(__dirname.concat("/public")));
 
 app.get("/", (req, res) => {
@@ -34,5 +38,17 @@ app.get("/json", (req, res) => {
     res.json({ message: "Hello json" });
   }
 });
+
+app.get(
+  "/now",
+  (req, res, next) => {
+    req.time = new Date().toString(); // Hypothetical synchronous operation
+    next();
+  },
+  (req, res) => {
+    let response = { time: req.time };
+    res.json(response);
+  }
+);
 
 module.exports = app;

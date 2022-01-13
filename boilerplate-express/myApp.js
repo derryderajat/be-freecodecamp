@@ -1,7 +1,8 @@
 require("dotenv").config();
+let bodyParser = require("body-parser");
 // Apps JS
-var express = require("express");
-var app = express();
+let express = require("express");
+let app = express();
 // console.log("Hello World");
 
 // app.METHOD(PATH, HANDLER)
@@ -18,7 +19,8 @@ var app = express();
 // app.get("/", (req, res) => {
 //   res.send("Hello Express");
 // });
-
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 // app.use(express.static(__dirname.concat('/public')))
 app.use((request, response, next) => {
   console.log(request.method + " " + request.path + " - " + request.ip);
@@ -54,6 +56,11 @@ app.get(
 app.get("/:word/echo", (req, res) => {
   const { word } = req.params;
   res.json({ echo: word });
+});
+
+app.get("/name", (req, res) => {
+  const { first, last } = req.query;
+  res.json({ name: `${first} ${last}` });
 });
 
 module.exports = app;
